@@ -44,3 +44,98 @@ public class Car {
     }
 }
 ```   
+In this example, the Car class is directly responsible for creating an Engine instance. This makes it tightly coupled to the Engine class, which can be limiting and hard to test.
+
+## With IoC (Using Spring and Dependency Injection)
+In the IoC approach, the Spring container manages the dependencies and injects the Engine into the Car class.
+
+- Define the Engine and Car classes without dependency creation.
+- Configure the dependencies in the Spring container (either through annotations or XML configuration).
+
+**Annotate the classes and let Spring automatically wire dependencies.**
+DemoApplication.java
+```
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+
+@SpringBootApplication
+public class DemoApplication {
+
+	public static void main(String[] args) {
+		ApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+		
+		// SpringApplication is an interface which contain run method
+		// this run method gives ConfigurableApplicationContext type obj
+		// this obj provide by application and injected in DemoApplication class to instantiate engine object
+		
+//		Car car = new Car();  //if we use like this, means now I am reponsible to handle this object 
+		Car car = context.getBean(Car.class); // now my framework will be responsible to inject this object
+		
+		// This bean() method belongs to an ApplicationContext Interface
+		car.drive();
+	}
+
+}
+```
+Car.java
+
+```
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component // means now spring understand that, i am responsible to create the object of Car
+public class Car{
+	
+	@Autowired // Spring injects the Engine instance here
+	Engine engine;
+	
+	public void drive() {
+		engine.start();
+		System.out.println("Car is driving");
+	}
+
+}
+```
+**Here, @Autowired instructs Spring to inject an Engine bean when it creates a Car bean.**
+
+Engine.java
+```
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component    // means now spring understand that, i am responsible to create the object of Engine
+public class Engine {
+	public void start() {
+		System.out.println("Engine Start");
+	}
+}
+````
+
+> Alternatively, you could use an XML file to define the beans and dependencies. (suppose i am using constructor injection)
+```
+<!-- applicationContext.xml -->
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define the Engine bean -->
+    <bean id="engine" class="Engine" />
+
+    <!-- Define the Car bean and inject the Engine bean -->
+    <bean id="car" class="Car">
+        <constructor-arg ref="engine" /> //constructor inject pass id in ref
+    </bean>
+</beans>
+```
+**Benefits of Using IoC and DI** 
+- Loose Coupling: Car no longer depends on Engine directly, making the code more modular and flexible.
+- Easy Testing: You can mock dependencies like Engine for testing purposes.
+- Improved Maintainability: You can change dependency implementations without modifying the dependent class.
