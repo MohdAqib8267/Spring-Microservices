@@ -13,3 +13,8 @@ container or framework. This allows applications to be more modular, flexible, a
 ## Key Concepts of IoC
 1. **Control Shift:** Traditionally, objects are responsible for finding or creating their dependencies. With IoC, an external container (like the Spring IoC container) manages this process, injecting dependencies into objects.
 2. **Dependency Injection (DI):** Dependencies are "injected" into a class instead of the class creating them itself. This is typically done via constructor injection, setter injection, or field injection.
+
+**Types of Dependency Injection in Spring**
+1. **Constructor Injection:** Dependencies are injected through the constructor.
+2. **Setter Injection:** Dependencies are injected through public setter methods.
+3. **Field Injection:** Dependencies are directly injected into fields using annotations.
