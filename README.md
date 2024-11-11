@@ -18,3 +18,29 @@ container or framework. This allows applications to be more modular, flexible, a
 1. **Constructor Injection:** Dependencies are injected through the constructor.
 2. **Setter Injection:** Dependencies are injected through public setter methods.
 3. **Field Injection:** Dependencies are directly injected into fields using annotations.
+
+**Example of IoC and Dependency Injection in Spring**
+
+Consider a simple example where we have a Car class that depends on an Engine class. Without IoC, the Car class would be responsible for creating the Engine instance, making it tightly coupled to the Engine implementation.
+   **Without IoC (Traditional Approach)**
+```
+public class Engine {
+    public void start() {
+        System.out.println("Engine started");
+    }
+}
+
+public class Car {
+    private Engine engine;
+
+    public Car() {
+        // Car creates its own Engine instance
+        engine = new Engine();
+    }
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is driving");
+    }
+}
+```   
