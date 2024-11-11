@@ -133,6 +133,13 @@ public class Engine {
     <bean id="car" class="Car">
         <constructor-arg ref="engine" /> //constructor inject pass id in ref
     </bean>
+
+	<!-- Define the Car bean and inject the Engine bean using setter injection -->
+       <bean id="car" class="Car">
+        	<property name="engine" ref="engine" />
+      </bean>
+	<!-- <property name="engine" ref="engine" />: This element injects the Engine bean into the Car bean by calling the setEngine method. -->
+
 </beans>
 ```
 **Benefits of Using IoC and DI** 
