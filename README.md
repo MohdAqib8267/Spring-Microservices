@@ -283,6 +283,17 @@ Output: constructor call
 ```
 **Now one thing, suppose if we create more than one object of same bean, these beans are pointing on same configuration on container, That's why called it singleton bean.**
 ```
+Alien.java
+public class Alien {
+	int age;
+	public Alient(){
+	System.out.println("constructor call");
+	}
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+
 App.java
 public static void main( String[] args )
     {
@@ -296,13 +307,88 @@ public static void main( String[] args )
 
 	Alien obj2 = (Alien) factory.getBean("alien");
 	obj2.code();
-	System.out.println(obj2.age); // obj2 pointing to same configuration whereage is 30, because singlition bean hai. mtlab kitne b objects ho sabke liye same hogi, normal objects me alag alag objects ki alag alag hoti hai.
+	System.out.println(obj2.age); // obj2 pointing to same configuration whereage is 30, because singleton bean hai. mtlab kitne b objects ho sabke liye same hogi, normal objects me alag alag objects ki alag alag hoti hai.
     }
 
 Output:
+constructor call
 I am coding
 30
 
 I am coding
 30
+```
+But if you want multiple instance, then we need to **change scope to prototype** in spring.xml file. by **default score is singleton.**
+```
+   <bean id = "alien" class = "com.aqib.Alient" scope="prototype">
+     
+   </bean>
+```
+now if we create 10 objects, container gives us 10 different instanse of bean. but now container will call contstructor untill you request. so now 
+```
+Alien.java
+public class Alien {
+	int age;
+	public Alient(){
+	System.out.println("constructor call");
+	}
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+
+App.java
+public static void main( String[] args )
+    {
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+	obj.code();
+	obj.age=30;
+	System.out.println(obj.age);
+
+	Alien obj2 = (Alien) factory.getBean("alien");
+	obj2.code();
+	System.out.println(obj2.age); // obj2 pointing to another instanse of class
+    }
+
+Output:
+constructor call
+I am coding
+30
+
+constructor call
+I am coding
+0
+```
+but now container will not call contstructor untill you request. so now but suppose if i comment out all objects.
+```
+Alien.java
+public class Alien {
+	int age;
+	public Alient(){
+	System.out.println("constructor call");
+	}
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+
+App.java
+public static void main( String[] args )
+    {
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+	//obj.code();
+	//obj.age=30;
+	//System.out.println(obj.age);
+
+	Alien obj2 = (Alien) factory.getBean("alien");
+	//obj2.code();
+	//System.out.println(obj2.age); // obj2 pointing to another instanse of class
+    }
+Output:                (nothing will print even constructor)
 ```
