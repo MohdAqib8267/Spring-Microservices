@@ -165,7 +165,7 @@ public class App
 {
     public static void main( String[] args )
     {
-    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("spring.xml"));
         Alien obj = (Alien) factory.getBean("alien");
         obj.code();
     }
@@ -181,7 +181,7 @@ public class Alien {
 	}
 }
 ```
-Spring.xml
+spring.xml
 ```
 <?xml version = "1.0" encoding = "UTF-8"?>
 
@@ -197,3 +197,23 @@ Spring.xml
 
 </beans>
 ```
+## ApplicationContext
+
+ApplicationContext is a central interface (or sub-interface of the BeanFactory. Therefore, it offers all the functionalities of BeanFactory.) in the Spring framework, acting as a more powerful and feature-rich version of BeanFactory. It is the standard way to configure and manage beans in a Spring application and provides essential services such as dependency injection, event propagation, and resource management.
+
+Advatages of ApplicationContext over BeanFactory
+
+- Eager Initialization: By default, ApplicationContext eagerly initializes singleton beans at startup, whereas BeanFactory does so lazily (only when a bean is requested).
+- Additional Features: ApplicationContext provides features like event propagation, declarative mechanisms to create a bean, and integration with AOP (Aspect-Oriented Programming).
+- Internationalization: ApplicationContext supports internationalization (i18n) through message resources.
+  ```
+   public static void main( String[] args )
+    {
+//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+        obj.code();
+    }
+    ```
+Note: **Alien and spring.xml files are same.**
