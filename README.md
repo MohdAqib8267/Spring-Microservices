@@ -208,7 +208,7 @@ Advatages of ApplicationContext over BeanFactory
 - Additional Features: ApplicationContext provides features like event propagation, declarative mechanisms to create a bean, and integration with AOP (Aspect-Oriented Programming).
 - Internationalization: ApplicationContext supports internationalization (i18n) through message resources.
 
-  ```
+ ```
    public static void main( String[] args )
     {
 	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
@@ -219,3 +219,90 @@ Advatages of ApplicationContext over BeanFactory
     }
 ```
 Note: **Alien and spring.xml files are same.**
+
+## Spring Container or IOC Container
+
+The IoC container is responsible to instantiate, configure and assemble the objects. The IoC container gets informations from the XML file and works accordingly. The main tasks performed by IoC container are:
+
+- to instantiate the application class
+- to configure the object
+- to assemble the dependencies between the objects
+- There are two types of IoC containers. They are:
+
+1. BeanFactory
+2. ApplicationContext
+
+> App.java
+```
+public static void main( String[] args )
+    {
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+        obj.code();
+    }
+```
+> Alien.java
+```
+package SpringDemo.app;
+
+public class Alien {
+	int age;
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+```
+output: I am coding
+
+**But if we create an constructor in Alien class and  comment out obj.code(), still my constructor will call but not methods. means when we instantiate class(bean), configuration of this stored in IOC container. and whenever object is required of this, it provide.**
+```
+Alien.java
+public class Alien {
+	int age;
+	public Alient(){
+	System.out.println("constructor call");
+	}
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+
+App.java
+public static void main( String[] args )
+    {
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+        //obj.code();
+    }
+
+Output: constructor call
+```
+**Now one thing, suppose if we create more than one object of same bean, these beans are pointing on same configuration on container, That's why called it singleton bean.**
+```
+App.java
+public static void main( String[] args )
+    {
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+	obj.code();
+	obj.age=30;
+	System.out.println(obj.age);
+
+	Alien obj2 = (Alien) factory.getBean("alien");
+	obj2.code();
+	System.out.println(obj2.age); // obj2 pointing to same configuration whereage is 30, because singlition bean hai. mtlab kitne b objects ho sabke liye same hogi, normal objects me alag alag objects ki alag alag hoti hai.
+    }
+
+Output:
+I am coding
+30
+
+I am coding
+30
+```
