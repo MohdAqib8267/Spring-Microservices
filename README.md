@@ -146,3 +146,54 @@ public class Engine {
 - Loose Coupling: Car no longer depends on Engine directly, making the code more modular and flexible.
 - Easy Testing: You can mock dependencies like Engine for testing purposes.
 - Improved Maintainability: You can change dependency implementations without modifying the dependent class.
+
+## BeanFactory
+In Spring, BeanFactory is the core interface for the IoC (Inversion of Control) container, responsible for instantiating, configuring, and managing beans. A "bean" in Spring is essentially an object that is instantiated, assembled, and managed by the Spring container.
+
+NoTE: BeanFactory is the root interface of the Spring IoC container hierarchy
+
+**Common Implementations of BeanFactory**
+- The main implementation of BeanFactory in Spring is the XmlBeanFactory, which was previously used for parsing XML configuration files to create beans. However, XmlBeanFactory is now deprecated, and ApplicationContext is generally preferred in most applications.
+
+App.java
+```
+package SpringDemo.app;
+
+import org.springframework.beans.factory.BeanFactory;
+
+public class App 
+{
+    public static void main( String[] args )
+    {
+    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+        Alien obj = (Alien) factory.getBean("alien");
+        obj.code();
+    }
+}
+```
+Alien.java
+```
+package SpringDemo.app;
+
+public class Alien {
+	public void code() {
+		System.out.println("I m coding");
+	}
+}
+```
+Spring.xml
+```
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+//only below bean are important
+   <bean id = "alien" class = "com.aqib.Alient">
+     
+   </bean>
+
+</beans>
+```
