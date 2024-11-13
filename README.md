@@ -181,6 +181,7 @@ public class Alien {
 	}
 }
 ```
+
 spring.xml
 ```
 <?xml version = "1.0" encoding = "UTF-8"?>
@@ -203,17 +204,18 @@ ApplicationContext is a central interface (or sub-interface of the BeanFactory. 
 
 Advatages of ApplicationContext over BeanFactory
 
-- Eager Initialization: By default, ApplicationContext eagerly initializes singleton beans at startup, whereas BeanFactory does so lazily (only when a bean is requested).
+- Eager Initialization: By default, ApplicationContext eagerly initializes singleton beans(matlab ki kitne bhi objects bna lo container us class ka ek hi bnayega or ek hi jgah point kreyga) at startup, whereas BeanFactory does so lazily (only when a bean is requested).
 - Additional Features: ApplicationContext provides features like event propagation, declarative mechanisms to create a bean, and integration with AOP (Aspect-Oriented Programming).
 - Internationalization: ApplicationContext supports internationalization (i18n) through message resources.
+
   ```
    public static void main( String[] args )
     {
-//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
+	//    	BeanFactory factory = new XmlBeanFactory(new FileSystemResource("Spring.xml"));
     	
     	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
         Alien obj = (Alien) factory.getBean("alien");
         obj.code();
     }
-    ```
+```
 Note: **Alien and spring.xml files are same.**
