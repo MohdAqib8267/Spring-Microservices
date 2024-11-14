@@ -433,6 +433,7 @@ void display(){
     System.out.println(id+" "+name+" "+city);  
 }  
 }
+these setters are called by property sublement
 ```
 **spring.xml**
 We are providing the information into the bean by this file. The property element invokes the setter method . The value subelement of property will assign the specified value.
@@ -479,4 +480,84 @@ public class Test {
     }  
 }
 ```
+**Ref Attribute:** Ref attribute is used to assign the refernce of another class, and now you can use methods of referenced class. To do this you need to pass **ref** parameter in property sublement and assign class name which you want to referred.
+
+This is an example of how we can use setter injection of user defined data types.
+
+```
+// spring.xml (Inside src)
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="alien" class="SpringDemo.app.Alien">
+        <property name="age" value="10"></property>
+        <property name="laptop" ref="laptop"></property>
+    </bean>
+    <bean id="laptop" class="SpringDemo.app.Laptop">
+    
+    </bean>
+</beans>
+
+//Laptop.java
+package SpringDemo.app;
+
+public class Laptop {
+	public void compiled() {
+		System.out.println("Compiled..");
+	}
+}
+
+//Alien.java
+package SpringDemo.app;
+
+public class Alien {
+	private Laptop laptop;
+	
+	private int age;
+	
+	public Alien() {
+		System.out.println("Alien object is created");
+	}
+	
+	public Laptop getLaptop() {
+		return laptop;
+	}
+	public void setLaptop(Laptop laptop) {
+		this.laptop = laptop;
+	}
+	public int getAge() {
+		System.out.println("Age is assigned");
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public void code() {
+		System.out.println("I m coding");
+		laptop.compiled();
+	}
+}
+
+//App.java
+package SpringDemo.app;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+
+public class App 
+{
+    public static void main( String[] args )
+    {
+    	
+    	ApplicationContext factory = new ClassPathXmlApplicationContext("spring.xml");
+        Alien obj = (Alien) factory.getBean("alien");
+        obj.code();
+        
+        System.out.println(obj.getAge());
+    }
+}
 ```
