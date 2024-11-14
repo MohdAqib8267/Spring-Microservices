@@ -493,8 +493,8 @@ This is an example of how we can use setter injection of user defined data types
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="alien" class="SpringDemo.app.Alien">
-        <property name="age" value="10"></property>
-        <property name="laptop" ref="laptop"></property>
+        <property name="age" value="10"></property>   //primitive property
+        <property name="laptop" ref="laptop"></property>  //referenced proprty
     </bean>
     <bean id="laptop" class="SpringDemo.app.Laptop">
     
@@ -560,4 +560,48 @@ public class App
         System.out.println(obj.getAge());
     }
 }
+```
+
+### Constructor Injection:
+We can inject the dependency by constructor. The <constructor-arg> subelement of <bean> is used for constructor injection. This means that the dependencies are injected when the object is created, and they are typically declared in the Spring configuration file or using annotations.
+
+```
+// Alien.java
+public class Alien {
+    private Planet planet;
+
+    // Constructor for dependency injection
+    public Alien(Planet planet) {
+        this.planet = planet;
+    }
+
+    public void displayPlanet() {
+        System.out.println("Alien is from " + planet.getName());
+    }
+}
+
+// Planet.java
+public class Planet {
+    private String name;
+
+    public Planet(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+```
+xml config
+```
+<!-- Define Planet bean -->
+    <bean id="planet" class="Planet">
+        <constructor-arg value="Mars"/>
+    </bean>
+
+    <!-- Define Alien bean and inject Planet through constructor -->
+    <bean id="alien" class="Alien">
+        <constructor-arg ref="planet"/>
+    </bean>
 ```
