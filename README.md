@@ -605,3 +605,137 @@ xml config
         <constructor-arg ref="planet"/>
     </bean>
 ```
+
+
+# Spring JDBC
+
+SpringJdbcApplication.java
+```
+import com.aqib.SpringJDBC.modal.Alien;
+import com.aqib.SpringJDBC.repo.AlienRepo;
+
+@SpringBootApplication
+public class SpringJdbcApplication {
+
+	public static void main(String[] args) {
+		ApplicationContext context=SpringApplication.run(SpringJdbcApplication.class, args);
+		Alien alien1=context.getBean(Alien.class);
+		
+		alien1.setId(5);
+		alien1.setEmail("mpohd@gmail.com");
+		alien1.setName("Aqib");
+		
+		AlienRepo repo = context.getBean(AlienRepo.class);
+		repo.save(alien1);
+		
+		System.out.println(repo.findAll());
+		
+	}
+
+}
+```
+Alien.java (modal)
+```
+package com.aqib.SpringJDBC.modal;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("prototype")
+public class Alien {
+	private int id;
+	private String name;
+	private String email;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	@Override
+	public String toString() {
+		return "Alien [id=" + id + ", name=" + name + ", email=" + email + "]";
+	}
+}
+```
+AlienRepo.java(package=com.aqib.SpringJDBC.repo)
+```
+package com.aqib.SpringJDBC.repo;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import com.aqib.SpringJDBC.modal.Alien;
+
+@Repository
+public class AlienRepo {
+	
+	@Autowired
+	private JdbcTemplate template;
+	
+
+	public JdbcTemplate getTemplate() {
+		return template;
+	}
+	public void setTemplate(JdbcTemplate template) {
+		this.template = template;
+	}
+	public void save(Alien alien) {
+	    String sql = "INSERT INTO alien (id, name, email) VALUES (?, ?, ?)";
+	    int rows = template.update(sql, alien.getId(), alien.getName(), alien.getEmail());
+	    System.out.println("Rows affected: " + rows);
+	}
+
+	public List<Alien> findAll(){
+		String sql = "select * from alien where id>1";
+		
+		RowMapper<Alien> mapper = new RowMapper<Alien>() {
+			@Override
+			public Alien mapRow(ResultSet rs, int rowNum) throws SQLException{
+				Alien a = new Alien();
+				a.setId(rs.getInt("id"));
+				a.setName(rs.getString("name"));
+				a.setEmail(rs.getString("email"));
+				return a;
+			}
+		};
+		List<Alien> aliens = template.query(sql, mapper);
+		return aliens;
+	}
+}
+```
+resource>Schema.sql
+```
+create table alien(
+	id int primary key,
+	name varchar(20),
+	email varchar(100)
+);
+```
+resource>data.sql
+```
+insert into alien(id,name,email) values(1,'jack','jack@gmail.com');
+insert into alien(id,name,email) values(2,'john','john@gmail.com');
+```
