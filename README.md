@@ -844,13 +844,52 @@ Spring provides two mechanisms to protect against CSRF attacks:
 - 1.The Synchronizer Token Pattern (CSRF Token)
 - 2.Specifying the SameSite Attribute on your session cookie (means only same site can access)
 
-Both protections require that **Safe Methods be Read-only**.(means that requests with the HTTP GET, HEAD, OPTIONS, and TRACE methods should not change the state of the application.(inme csrf token ki zrurat nhi))
+Both protections require that **Safe Methods be Read-only**.(means that requests with the HTTP GET, HEAD, OPTIONS, and TRACE methods should not change the state of the application.(inme csrf token ki zrurat nhi, q ki we want external website can read it and also help this to leakage the token))
 
 **Synchronizer Token Pattern**
 we can see a **_csrf** token (hidden type) in servlet form.
 
 When an HTTP request is submitted, the server must look up the expected CSRF token and compare it against the actual CSRF token in the HTTP request. If the values do not match, the HTTP request should be rejected.
 
-basically in the http request we have add token with key "X-XSRF-TOKEN", and for post,put and delete methods. send this token value
+basically in the http request we have add token with key "X-XSRF-TOKEN", and for post,put and delete methods. send this token value.
+
+```
+public CsrfToken getCsrfToken(HttpServletRequest req){
+	return (CsrfToken) req.getAttribute("_csrf");
+}
+```
+
+So, server will check _csrf token and it will be present only authentic website form
+```
+Synchronizer Token Form
+<form method="post"
+	action="/transfer">
+<input type="hidden"
+	name="_csrf"
+	value="4bfd1575-3ad1-4d21-96c7-4ef2d9f86721"/>
+<input type="text"
+	name="amount"/>
+<input type="text"
+	name="routingNumber"/>
+<input type="hidden"
+	name="account"/>
+<input type="submit"
+	value="Transfer"/>
+</form>
+````
+The form now contains a hidden input with the value of the CSRF token. External sites cannot read the CSRF token since the same origin policy ensures the evil site cannot read the response.
+
+The corresponding HTTP request to transfer money would look like this:
+
+Synchronizer Token request
+```
+POST /transfer HTTP/1.1
+Host: bank.example.com
+Cookie: JSESSIONID=randomid
+Content-Type: application/x-www-form-urlencoded
+
+amount=100.00&routingNumber=1234&account=9876&_csrf=4bfd1575-3ad1-4d21-96c7-4ef2d9f86721
+```
+
 
 
