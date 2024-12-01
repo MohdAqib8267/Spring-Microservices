@@ -756,10 +756,82 @@ For Eg: when we import spring security dependency in our application, and try to
 
 we can change username and password in application.properties, but it would be only for a single user.
 
+```
+spring.security.user.name=Aqib
+spring.security.user.password=Aqib8267
+```
 **But question is why this login page coming?**
 
-So, the answer is due to Filters, spring security allows a filter chain in servlet container, this chain containe multiple filters, some filters are related to login logout filters, in below images we have a filter chain containing filters f1,f2,f3.....
+So, the answer is due to Filters, spring security allows a filter chain in servlet container, this chain containe multiple filters, some filters are related to login logout filters, and these login filter send this login page if user is not logged in. below images we have a filter chain containing filters f1,f2,f3.....
+
+when user logged in, it generate a session ID, that stores in cookies, and this session is maintains over the instance of browser.
 
 in filters we can modify request and response.
 
 ![Screenshot 2024-12-01 192148](https://github.com/user-attachments/assets/7ba549cf-031c-49f7-9c46-e506103c319e)
+
+we can get this session ID using HttpServletRequest object 
+```
+@GetMapping("/")
+public String greet(HttpServletRequest request){
+	return "Hello my session ID is: "+ request.getSession().getId();
+}
+```
+> For postman we can login in Autorization and give keys (username and password)
+
+## CSRF (Cross Site Request Forgery):
+**What is a CSRF Attack?**
+
+The best way to understand a CSRF attack is by taking a look at a concrete example.
+
+Assume that your bank’s website provides a form that allows transferring money from the currently logged in user to another bank account. For example, the transfer form might look like:
+
+Transfer form
+```
+<form method="post"
+	action="/transfer">
+<input type="text"
+	name="amount"/>
+<input type="text"
+	name="routingNumber"/>
+<input type="text"
+	name="account"/>
+<input type="submit"
+	value="Transfer"/>
+</form>
+```
+The corresponding HTTP request might look like:
+
+```
+Transfer HTTP request
+POST /transfer HTTP/1.1
+Host: bank.example.com
+Cookie: JSESSIONID=randomid
+Content-Type: application/x-www-form-urlencoded
+
+amount=100.00&routingNumber=1234&account=9876
+```
+Now pretend you authenticate to your bank’s website and then, without logging out, visit an evil website. The evil website contains an HTML page with the following form:
+
+Evil transfer form
+```
+<form method="post"
+	action="https://bank.example.com/transfer">
+<input type="hidden"
+	name="amount"
+	value="100.00"/>
+<input type="hidden"
+	name="routingNumber"
+	value="evilsRoutingNumber"/>
+<input type="hidden"
+	name="account"
+	value="evilsAccountNumber"/>
+<input type="submit"
+	value="Win Money!"/>
+</form>
+```
+You like to win money, so you click on the submit button. In the process, you have unintentionally transferred $100 to a malicious user. This happens because, while the evil website cannot see your cookies, the cookies associated with your bank are still sent along with the request.(kyuki wo us session ID ki help se bank ko authentic user lgega and bank money transfer kr dega).
+
+Worse yet, this whole process could have been automated by using JavaScript. This means you did not even need to click on the button. Furthermore, it could just as easily happen when visiting an honest site that is a victim of a XSS attack. So how do we protect our users from such attacks?
+
+
