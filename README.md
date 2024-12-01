@@ -758,6 +758,8 @@ we can change username and password in application.properties, but it would be o
 
 **But question is why this login page coming?**
 
-So, the answer is due to Filters, spring security allows a filter chain in servlet container, this chain containe multiple filters, some filters are related to login logout
+So, the answer is due to Filters, spring security allows a filter chain in servlet container, this chain containe multiple filters, some filters are related to login logout filters, in below images we have a filter chain containing filters f1,f2,f3.....
+
+in filters we can modify request and response.
 
 ![Screenshot 2024-12-01 192148](https://github.com/user-attachments/assets/7ba549cf-031c-49f7-9c46-e506103c319e)
