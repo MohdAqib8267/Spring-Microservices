@@ -835,3 +835,22 @@ You like to win money, so you click on the submit button. In the process, you ha
 Worse yet, this whole process could have been automated by using JavaScript. This means you did not even need to click on the button. Furthermore, it could just as easily happen when visiting an honest site that is a victim of a XSS attack. So how do we protect our users from such attacks?
 
 
+**Protecting Against CSRF Attacks**
+
+The reason that a CSRF attack is possible is that the HTTP request from the victim’s website and the request from the attacker’s website are exactly the same. This means there is no way to reject requests coming from the evil website and allow only requests coming from the bank’s website. To protect against CSRF attacks, we need to ensure there is something in the request that the evil site is unable to provide so we can differentiate the two requests.
+
+Spring provides two mechanisms to protect against CSRF attacks:
+
+- 1.The Synchronizer Token Pattern (CSRF Token)
+- 2.Specifying the SameSite Attribute on your session cookie (means only same site can access)
+
+Both protections require that **Safe Methods be Read-only**.(means that requests with the HTTP GET, HEAD, OPTIONS, and TRACE methods should not change the state of the application.(inme csrf token ki zrurat nhi))
+
+**Synchronizer Token Pattern**
+we can see a **_csrf** token (hidden type) in servlet form.
+
+When an HTTP request is submitted, the server must look up the expected CSRF token and compare it against the actual CSRF token in the HTTP request. If the values do not match, the HTTP request should be rejected.
+
+basically in the http request we have add token with key "X-XSRF-TOKEN", and for post,put and delete methods. send this token value
+
+
