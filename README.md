@@ -911,10 +911,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig{
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-		http.csrf(customizer -> customizer.disable())
-		     .authorizeHttpRequest(request -> request.anyRequest().authenticated())
-		     .httpBasic(customizer.withDefaults())
-		     .sessionManagement(session -> session.sessionCreationPolicy(sessionCreationPolicy.STATELESS));
+		http.csrf(customizer -> customizer.disable()) //disable csrf 
+		     .authorizeHttpRequest(request -> request.anyRequest().authenticated()) //authenticate each request
+		     .httpBasic(customizer.withDefaults()) // enable postman & (browser form only one time) for taking username and password
+		     .sessionManagement(session -> session.sessionCreationPolicy(sessionCreationPolicy.STATELESS)); // its enable session stateless, will generate a new session ID for each request, that's why we have disabled csrf
+
+
+//for browser we can enable form on browser
+// http.formLogin(customizer.withDefaults()) // but this form will get each time because we get a new id each time
 
 		return http.build();
 	}
