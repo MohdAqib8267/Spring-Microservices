@@ -891,5 +891,37 @@ Content-Type: application/x-www-form-urlencoded
 amount=100.00&routingNumber=1234&account=9876&_csrf=4bfd1575-3ad1-4d21-96c7-4ef2d9f86721
 ```
 
+## Spring Security Configuration
+Basically we have implemented security, but most of the securities are implemented by default, but we can customize these eg, login page etc.
+
+By default spring security provide FilterChain, but i want to customize it, and we can do this by creating a **Config Class**
+
+> create package (config) -> SecurityConfig.java
+
+```
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration  // this tells, this is a Configuration class
+@EnableWebSecurity  // it's enable that we have use our securities
+
+public class SecurityConfig{
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+		http.csrf(customizer -> customizer.disable())
+		     .authorizeHttpRequest(request -> request.anyRequest().authenticated())
+		     .httpBasic(customizer.withDefaults())
+		     .sessionManagement(session -> session.sessionCreationPolicy(sessionCreationPolicy.STATELESS));
+
+		return http.build();
+	}
+}
+```
+
+Note: please read below article for a solid understanding.
+> https://spring.io/guides/gs/securing-web
 
 
