@@ -932,6 +932,8 @@ Note: please read below article for a solid understanding.
 ## Spring Security User from Database
 By Default user details handled by UserDetailsService, but we can customise this, so we have create this and all done
 
+> SecurityConfig.java 
+
 ```
 package com.telusko.part29springsecex.config;
 
@@ -968,3 +970,14 @@ public UserDetailsService userDetailsService(){
 }
 
 ```
+> But we also we have used hardcoded value, user can login only above details
+
+Now we want to use with database, so when user send details, it goes to an "Un-Autheticated Object", it goes to "Authentication Provider" that will provide services and authenticated and making it "Authenticated Object", by default it's running behind the scene, but we want to use our **custome Authentication Provider** and this **Authentication provider** used to connect with **Database**
+
+<img width="523" alt="image" src="https://github.com/user-attachments/assets/a69682e1-be68-4318-9fc4-1f8d9b7e3a3a">
+
+
+So, we have different type of **AuthenticationProvider**, but we will use **DaoAuthenticationProvider**, because it is used for Database.
+
+> For complete code, follow below repo
+> https://github.com/navinreddy20/spring6yt/tree/main/Part33-Spring%20Security%206%20Verfiy%20User%20from%20Database/src/main/java/com/telusko/part29springsecex
