@@ -929,3 +929,42 @@ Note: please read below article for a solid understanding.
 > https://spring.io/guides/gs/securing-web
 
 
+## Spring Security User from Database
+By Default user details handled by UserDetailsService, but we can customise this, so we have create this and all done
+
+```
+package com.telusko.part29springsecex.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;  
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Bean
+public UserDetailsService userDetailsService(){
+	// This UserDetailsService is an interface, so InMemoryUserDetailsManager class implement this interface
+
+	UserDetails user1 = User
+				.withDefaultPasswordEncoder()
+				.username("kiran")
+				.password("k@123")
+				.roles("USER")
+				.build();   // basically this build return object of UserDetils type
+	UserDetails user1 = User
+				.withDefaultPasswordEncoder()
+				.username("jack")
+				.password("j@123")
+				.roles("ADMIN")
+				.build();
+	return new InMemoryUserDetailsService(user1,user2); // in this object we have pass multiple users in the constructor
+}
+
+```
