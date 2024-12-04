@@ -981,3 +981,15 @@ So, we have different type of **AuthenticationProvider**, but we will use **DaoA
 
 > For complete code, follow below repo
 > https://github.com/navinreddy20/spring6yt/tree/main/Part33-Spring%20Security%206%20Verfiy%20User%20from%20Database/src/main/java/com/telusko/part29springsecex
+
+## JWT
+
+**Authentication** refers to the process of verifying the identity of a user, based on provided credentials. A common example is entering a username and a password when you log in to a website. You can think of it as an answer to the question Who are you?.
+  
+**Authorization** refers to the process of determining if a user has proper permission to perform a particular action or read particular data, assuming that the user is successfully authenticated. You can think of it as an answer to the question Can a user do/read this?.
+
+**Principle** refers to the currently authenticated user.
+
+**Granted authority** refers to the permission of the authenticated user.
+
+**Role** refers to a group of permissions of the authenticated user
