@@ -993,3 +993,33 @@ So, we have different type of **AuthenticationProvider**, but we will use **DaoA
 **Granted authority** refers to the permission of the authenticated user.
 
 **Role** refers to a group of permissions of the authenticated user
+
+#### Spring Security Architecture
+
+![images](https://github.com/user-attachments/assets/52c9baef-237d-4014-92a2-ada98b7e4bb6)
+Now, let’s break down this diagram into components and discuss each of them separately.
+
+**Spring Security Filters Chain**
+
+When you add the Spring Security framework to your application, it automatically registers a filters chain that intercepts all incoming requests. This chain consists of various filters, and each of them handles a particular use case.
+
+**AuthenticationManager**
+
+You can think of AuthenticationManager as a coordinator where you can register multiple providers, and based on the request type, it will deliver an authentication request to the correct provider.
+
+**AuthenticationProvider**
+
+AuthenticationProvider processes specific types of authentication. Its interface exposes only two functions:
+
+- **authenticate** performs authentication with the request.
+- **supports** checks if this provider supports the indicated authentication type.
+  
+One important implementation of the interface that we are using in our sample project is DaoAuthenticationProvider, which retrieves user details from a UserDetailsService.
+
+**UserDetailsService**
+
+UserDetailsService is described as a core interface that loads user-specific data in the Spring documentation.
+
+In most use cases, authentication providers extract user identity information based on credentials from a database and then perform validation. Because this use case is so common, Spring developers decided to extract it as a separate interface, which exposes the single function:
+
+- **loadUserByUsername** accepts username as a parameter and returns the user identity object.
