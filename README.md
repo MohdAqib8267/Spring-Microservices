@@ -1027,3 +1027,4 @@ In most use cases, authentication providers extract user identity information ba
 
 > https://www.toptal.com/spring/spring-security-tutorial
 > Read above articles for theory
+> JWT code, in Main branch with Folder name "Security"
