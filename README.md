@@ -1023,3 +1023,7 @@ UserDetailsService is described as a core interface that loads user-specific dat
 In most use cases, authentication providers extract user identity information based on credentials from a database and then perform validation. Because this use case is so common, Spring developers decided to extract it as a separate interface, which exposes the single function:
 
 - **loadUserByUsername** accepts username as a parameter and returns the user identity object.
+
+
+> https://www.toptal.com/spring/spring-security-tutorial
+> Read above articles for theory
