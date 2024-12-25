@@ -202,6 +202,8 @@ spring.xml
 
 ApplicationContext is a central interface (or sub-interface of the BeanFactory. Therefore, it offers all the functionalities of BeanFactory.) in the Spring framework, acting as a more powerful and feature-rich version of BeanFactory. It is the standard way to configure and manage beans in a Spring application and provides essential services such as dependency injection, event propagation, and resource management.
 
+(So we can say ApplicationContext is actual implementation of IOC)
+
 Advatages of ApplicationContext over BeanFactory
 
 - Eager Initialization: By default, ApplicationContext eagerly initializes singleton beans(matlab ki kitne bhi objects bna lo container us class ka ek hi bnayega or ek hi jgah point kreyga) at startup, whereas BeanFactory does so lazily (only when a bean is requested).
