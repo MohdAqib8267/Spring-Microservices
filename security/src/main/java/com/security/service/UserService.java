@@ -1,6 +1,5 @@
 package com.security.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,29 +14,37 @@ import com.security.repository.UserRepository;
 public class UserService {
 
 	@Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    AuthenticationManager authManager;
- 
-    @Autowired
-    private UserRepository repo;
-
-
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-
-    public User register(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        repo.save(user);
-        return user;
-    }
-
-    public String verify(User user) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
-        } else {
-            return "fail";
-        }
-    }
+	private UserRepository userRepository;
+	
+	@Autowired
+	private JwtService jwtService;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	
+	public User register(User user) {
+		//1st we need to encode our password
+		user.setPassword(encoder.encode(user.getPassword()));
+		//now store data into db
+		userRepository.save(user);
+		return user;
+	}
+	
+	public String verify(User user) {
+		//1st authenticate user using spring security
+		// if it is authenticated then generate token. (These are two different tasks)
+		
+		
+		//Authentication Manage authenticate user
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+		if(authentication.isAuthenticated()) {
+			return jwtService.generateToken(user.getUsername(), user.getRole());
+		}
+		else {
+			return "Something went wrong";
+		}
+		
+	}
 }
